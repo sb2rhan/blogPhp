@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+# call index method of HomeController class
+Route::get('/', [HomeController::class, 'index'])
+    ->name('index');
+
+# slash is not necessary here
+Route::get('form', [HomeController::class, 'form'])
+    ->name('form');
+
+Route::post('form', [HomeController::class, 'handle'])
+    ->name('form.handle');
+
+/*# name? - can be null
+Route::get('/hello/{name?}', function ($name = 'Guest') {
+   return "Hello, {$name}!";
+});*/
+
+/*# only digit ids
+Route::get('/posts/{id}', function ($id) {
+    return "ID -> {$id}";
+})->where('id', '[0-9]+');*/
