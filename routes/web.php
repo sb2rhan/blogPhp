@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 # call index method of HomeController class
-Route::get('/', [HomeController::class, 'index'])
+Route::redirect('/', 'posts')
     ->name('index');
 
 /*Route::get('posts', [PostController::class, 'index'])
@@ -49,3 +49,5 @@ Route::delete('posts/{post}', [PostController::class, 'destroy'])
 # Doing all of the above by 1 line
 # It learns all functions from PostController and creates routes by them
 Route::resource('posts', PostController::class);
+
+Route::resource('products', ProductController::class);

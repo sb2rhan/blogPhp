@@ -1,5 +1,6 @@
 <h1>Posts</h1>
-<a href="{{ route('posts.create') }}">Add post</a>
+<a href="{{ route('posts.create') }}" style="padding-right: 20px;">Add post</a>
+<a href="{{ route('products.index') }}">Check merch products</a>
 <hr>
 @if($posts->isNotEmpty())
 
