@@ -13,8 +13,8 @@ class PostController extends Controller
     function index() {
         # get all queries from DB
         $posts = Post::query()
-//            ->orderBy('created_at', 'desc') # or
             ->latest() # same as orderBy 'created_at'
+            ->with('user') # it will also query user table to prevent error from lazy loading
             ->get();
 
         return view('models.posts.index', [
@@ -23,16 +23,19 @@ class PostController extends Controller
     }
 
     function create() {
+        $this->authorize('create', Post::class);
         return view('models.posts.form');
     }
 
     function store() {
+        $this->authorize('create', Post::class);
         # Checking if html form (required) is not changed
         # Also checking db constraints
         $data = request()->validate($this->rules());
 
         # putting&converting data array into DB
-        $post = Post::query()
+        $post = auth()->user()
+            ->posts()
             ->create($data);
 
         # redirecting to new post page
@@ -53,12 +56,14 @@ class PostController extends Controller
     }
 
     function edit(Post $post) {
+        $this->authorize('update', $post);
         return view('models.posts.form', [
             'post' => $post
         ]);
     }
 
     function update(Post $post) {
+        $this->authorize('update', $post);
         $data = request()->validate($this->rules($post));
 
         $post->update($data);
@@ -66,6 +71,7 @@ class PostController extends Controller
     }
 
     function destroy(Post $post) {
+        $this->authorize('delete', $post);
         $post->delete();
         return redirect()->route('posts.index');
     }

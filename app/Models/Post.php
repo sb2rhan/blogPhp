@@ -12,8 +12,10 @@ class Post extends Model
     ];
     # getTable function will find table that is 'posts' itself
 
-    public function getRouteKeyName() # returns default keyname of route which is id now
-    {
-        return parent::getRouteKeyName();
+    # getRouteKeyName returns default keyname of route which is id now
+
+    function user() {
+        # Many to 1 relation
+        return $this->belongsTo(User::class);
     }
 }

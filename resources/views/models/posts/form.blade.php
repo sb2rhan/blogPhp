@@ -1,3 +1,6 @@
+@extends('layouts.main')
+
+@section('content')
 <?php
 $post = $post ?? null;
 ?>
@@ -29,3 +32,4 @@ $post = $post ?? null;
 
     <button>@if($post) Edit @else Create @endif</button>
 </form>
+@endsection
