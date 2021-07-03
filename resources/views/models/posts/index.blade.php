@@ -5,6 +5,7 @@
     @can('create', App\Models\Post::class)
         <a href="{{ route('posts.create') }}">Add post</a>
     @endcan
+    <a href="{{ route('products.index') }}">Go to products</a>
     <hr>
     @if($posts->isNotEmpty())
 

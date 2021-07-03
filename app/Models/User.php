@@ -46,4 +46,8 @@ class User extends Authenticatable
         # 1 to Many relation
         return $this->hasMany(Post::class);
     }
+
+    function products(): HasMany {
+        return $this->hasMany(Product::class);
+    }
 }

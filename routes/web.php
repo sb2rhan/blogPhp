@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,7 +17,10 @@ Route::resource('posts', PostController::class)
     ->only('index', 'show');
 
 
-# this route is protected by Authentication middleware
-Route::get('secret', function () {
-    echo 'Top secret INFO!';
-})->middleware('auth');
+Route::resource('products', ProductController::class)
+    ->except('index', 'show')
+    ->middleware('auth');
+
+Route::resource('products', ProductController::class)
+    ->only('index', 'show');
+
