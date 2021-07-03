@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        # needs authorization for all routes except for index and show
+        $this->authorizeResource(Post::class, 'post', [
+            'except' => ['index', 'show']
+        ]);
+    }
+
     /**
      * List of all posts
      */
@@ -23,15 +31,13 @@ class PostController extends Controller
     }
 
     function create() {
-        $this->authorize('create', Post::class);
+        //$this->authorize('create', Post::class);
         return view('models.posts.form');
     }
 
-    function store() {
-        $this->authorize('create', Post::class);
-        # Checking if html form (required) is not changed
-        # Also checking db constraints
-        $data = request()->validate($this->rules());
+    function store(PostRequest $request) {
+        //$this->authorize('create', Post::class);
+        $data = $request->validated();
 
         # putting&converting data array into DB
         $post = auth()->user()
@@ -56,45 +62,23 @@ class PostController extends Controller
     }
 
     function edit(Post $post) {
-        $this->authorize('update', $post);
+        //$this->authorize('update', $post);
         return view('models.posts.form', [
             'post' => $post
         ]);
     }
 
-    function update(Post $post) {
-        $this->authorize('update', $post);
-        $data = request()->validate($this->rules($post));
+    function update(PostRequest $request, Post $post) {
+        //$this->authorize('update', $post);
+        $data = $request->validated();
 
         $post->update($data);
         return redirect()->route('posts.show', $post);
     }
 
     function destroy(Post $post) {
-        $this->authorize('delete', $post);
+        //$this->authorize('delete', $post);
         $post->delete();
         return redirect()->route('posts.index');
-    }
-
-    /**
-     * Rules to create/edit posts
-     * @param Post|null $post
-     * @return array
-     */
-    protected function rules(Post $post = null): array {
-        $uniqueTitle = Rule::unique('posts', 'title');
-
-        if ($post)
-            $uniqueTitle->ignoreModel($post);
-
-        return [
-            'title' => [
-                'required',
-                'string',
-                'max:255',
-                $uniqueTitle
-            ],
-            'content' => ['required', 'string', 'min:10']
-        ];
     }
 }

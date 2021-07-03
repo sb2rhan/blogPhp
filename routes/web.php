@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,13 @@ Route::resource('posts', PostController::class)
     ->only('index', 'show');
 
 
-# this route is protected by Authentication middleware
-Route::get('secret', function () {
-    echo 'Top secret INFO!';
-})->middleware('auth');
+Route::prefix('posts/{post}')
+    ->middleware('auth')
+    ->group(function() { # comments routes are linked to post
+        Route::resource('comments', CommentController::class)
+            ->only('store');
+    });
+
+Route::resource('comments', CommentController::class)
+    ->middleware('auth')
+    ->only('destroy');

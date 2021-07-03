@@ -18,4 +18,8 @@ class Post extends Model
         # Many to 1 relation
         return $this->belongsTo(User::class);
     }
+
+    function comments() {
+        return $this->hasMany(Comment::class);
+    }
 }
