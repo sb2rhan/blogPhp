@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PostController extends Controller
 {
@@ -44,6 +46,8 @@ class PostController extends Controller
             ->posts()
             ->create($data);
 
+        $this->uploadImage($post, $request);
+
         # redirecting to new post page
         return redirect()->route('posts.show', $post);
     }
@@ -71,14 +75,49 @@ class PostController extends Controller
     function update(PostRequest $request, Post $post) {
         //$this->authorize('update', $post);
         $data = $request->validated();
-
         $post->update($data);
+
+        $this->uploadImage($post, $request);
         return redirect()->route('posts.show', $post);
     }
 
     function destroy(Post $post) {
         //$this->authorize('delete', $post);
+        $this->removeImage($post);
         $post->delete();
         return redirect()->route('posts.index');
+    }
+
+    function deleteImage(Post $post) {
+        $this->authorize('update', $post);
+
+        $this->removeImage($post);
+        $post->update([
+            'image_path' => null
+        ]);
+
+        return back();
+    }
+
+    function uploadImage(Post $post, PostRequest $request) {
+        if (!$request->hasFile('image'))
+            return;
+
+        # store image in /storage/app/public/posts
+        $path = $request->file('image')->store('public/posts');
+
+        if ($path === false)
+            throw ValidationException::withMessages([
+                'image' => 'Sorry, server error. Image path problem'
+            ]);
+
+        $this->removeImage($post);
+        $post->fill(['image_path' => $path])->save();
+    }
+
+    function removeImage(Post $post): bool {
+        if (!$post->image_path)
+            return false;
+        return Storage::delete($post->image_path);
     }
 }

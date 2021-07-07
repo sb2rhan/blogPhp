@@ -26,7 +26,8 @@ class PostRequest extends FormRequest
                 'max:255',
                 $uniqueTitle
             ],
-            'content' => ['required', 'string', 'min:10']
+            'content' => ['required', 'string', 'min:10'],
+            'image' => ['nullable', 'file']
         ];
     }
 }

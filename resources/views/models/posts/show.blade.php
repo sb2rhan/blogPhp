@@ -14,6 +14,21 @@
                 Author: {{ $post->user->name }}
             </small>
         </div>
+
+        @if($post->image_path)
+        <p>
+            <img height="200px" src="{{ \Storage::url($post->image_path) }}" alt="">
+            <!-- To make this work you need to link storage: >php artisan storage:link -->
+        </p>
+        @can('update')
+        <form action="{{ route('posts.deleteImage', $post) }}" method="post">
+            @csrf @method('delete')
+            <button>Delete image</button>
+        </form>
+        @endcan
+
+        @endif
+
         <p>
         {{$post->content}}
         </p>

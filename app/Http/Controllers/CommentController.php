@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Notifications\CommentCreated;
 
 class CommentController extends Controller
 {
@@ -28,6 +29,8 @@ class CommentController extends Controller
         $comment->user()->associate(auth()->user());
 
         $comment->save();
+
+        $post->user->notify(new CommentCreated($post, $comment));
 
         return back();
     }

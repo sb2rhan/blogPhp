@@ -7,8 +7,9 @@ $post = $post ?? null;
 
 <h1>@if($post) Edit @else New @endif post</h1>
 
-<form action="{{ $post ? route('posts.update', $post) : route('posts.store') }}" method="post">
+<form enctype="multipart/form-data" action="{{ $post ? route('posts.update', $post) : route('posts.store') }}" method="post">
     @csrf
+
 
     @if($post) <!-- Doing this because form doesn't support PUT method -->
         @method('put')
@@ -26,6 +27,13 @@ $post = $post ?? null;
         <label for="content">Content:</label>
         <textarea name="content" id="content" required>{{ old('content', $post->content ?? null) }}</textarea>
         @error('content')
+        <span style="color:red;">{{ $message }}</span>
+        @enderror
+    </div>
+    <div>
+        <label for="image">Image of post:</label>
+        <input type="file" name="image" id="image" accept="image/*" />
+        @error('image')
         <span style="color:red;">{{ $message }}</span>
         @enderror
     </div>

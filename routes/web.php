@@ -16,14 +16,18 @@ Route::resource('posts', PostController::class)
 Route::resource('posts', PostController::class)
     ->only('index', 'show');
 
+Route::delete('posts/{post}/image', [PostController::class, 'deleteImage'])
+    ->middleware('auth')
+    ->name('posts.deleteImage');
+
 
 Route::prefix('posts/{post}')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified']) # check if email is verified
     ->group(function() { # comments routes are linked to post
         Route::resource('comments', CommentController::class)
             ->only('store');
     });
 
 Route::resource('comments', CommentController::class)
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->only('destroy');

@@ -8,7 +8,7 @@ class Post extends Model
 {
     # which columns of table can be filled manually
     protected $fillable = [
-        'title', 'content'
+        'title', 'content', 'image_path'
     ];
     # getTable function will find table that is 'posts' itself
 
