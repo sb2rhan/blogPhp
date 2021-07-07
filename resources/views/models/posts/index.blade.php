@@ -13,9 +13,11 @@
                 <li value="{{ $post->id }}">
                     <a href="{{ route('posts.show', $post) }}">
                         {{ $post->title }}
-                    </a>
+                    </a>,
                     <small>
-                        {{ $post->user->name }}
+                        <a href="{{ route('users.show', $post->user) }}">
+                            {{ $post->user->name }}
+                        </a>
                     </small>
                 </li>
             @endforeach

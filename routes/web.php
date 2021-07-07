@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -16,7 +17,6 @@ Route::resource('posts', PostController::class)
 Route::resource('posts', PostController::class)
     ->only('index', 'show');
 
-
 Route::prefix('posts/{post}')
     ->middleware('auth')
     ->group(function() { # comments routes are linked to post
@@ -27,3 +27,6 @@ Route::prefix('posts/{post}')
 Route::resource('comments', CommentController::class)
     ->middleware('auth')
     ->only('destroy');
+
+Route::resource('users', UserController::class)
+    ->only('show');

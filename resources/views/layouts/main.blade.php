@@ -13,7 +13,11 @@
 
     @auth
         <div style="display: flex;">
-            {{ auth()->user()->name }}
+
+            <a href="{{ route('users.show', auth()->user()) }}">
+                {{ auth()->user()->name }}
+            </a>
+
             <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <button>Sign out</button>

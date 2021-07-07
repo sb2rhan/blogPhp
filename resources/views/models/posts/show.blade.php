@@ -11,7 +11,7 @@
         </div>
         <div>
             <small>
-                Author: {{ $post->user->name }}
+                Author: <a href="{{ route('users.show', $post->user) }}">{{ $post->user->name }}</a>
             </small>
         </div>
         <p>
@@ -53,11 +53,13 @@
             <p>
                 <small>
                     <span>
-                    @if($comment->user)
-                    {{ $comment->user->name }}
-                    @else
-                        DELETED
-                    @endif
+                        @if($comment->user)
+                            <a href="{{ route('users.show', $comment->user) }}">
+                                {{ $comment->user->name }}
+                            </a>
+                        @else
+                            DELETED
+                        @endif
                     </span>
                     @can('delete', $comment)
                     <a href="#" class="delete-comment-link" data-form-id="delete-comment-{{ $comment->id }}">
@@ -92,8 +94,11 @@
                 event.preventDefault();
                 let id = link.dataset.formId;
 
-                if (id)
-                    document.getElementById(id).submit();
+                if (id) {
+                    let form = document.getElementById(id);
+                    if (form)
+                        form.submit();
+                }
             })
         })
     </script>
