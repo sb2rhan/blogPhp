@@ -2,37 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
+use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Product::class, 'product', [
+            'except' => ['index', 'show']
+        ]);
+    }
 
-    public function index()
+    public function index(Category $category)
     {
         $products = Product::query()
+            ->where('category_id', $category->id)
             ->with('user')
             ->get();
 
         return view('models.products.index', [
-            'products' => $products
+            'products' => $products,
+            'category' => $category
         ]);
     }
 
-
-    public function create()
+    public function create(Category $category)
     {
-        $this->authorize('create', Product::class);
-        return view('models.products.form');
+        return view('models.products.form', [
+            'category' => $category
+        ]);
     }
 
-    public function store()
+    public function store(ProductRequest $request, Category $category)
     {
-        $this->authorize('create', Product::class);
-        $data = request()->validate($this->rules());
-
         $product = auth()->user()
-            ->products()->create($data);
+            ->products()->create($request->validated());
+
+        $product->category()->associate($category);
+        $product->save();
 
         return redirect()->route('products.show', $product);
     }
@@ -52,7 +61,6 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $this->authorize('update', $product);
         return view('models.products.form', [
             'product' => $product
         ]);
@@ -61,10 +69,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage
      */
-    public function update(Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
-        $this->authorize('update', $product);
-        $data = request()->validate($this->rules($product));
+        $data = $request->validated();
 
         $product->update($data);
         return redirect()->route('products.show', $product);
@@ -75,33 +82,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
         $product->delete();
-        return redirect()->route('products.index');
-    }
-
-    /**
-     * Rules to create/edit products
-     * @param Product|null $product
-     * @return array
-     */
-    protected function rules(Product $product = null): array {
-        $uniqueTitle = Rule::unique('products', 'title');
-
-        if ($product)
-            $uniqueTitle->ignoreModel($product);
-
-        return [
-            'title' => [
-                'required',
-                'string',
-                'max:255',
-                $uniqueTitle
-            ],
-            'description' => [],
-            'image_link' => [],
-            'count' => ['int', 'min:0'],
-            'price' => ['min:0']
-        ];
+        return redirect()->route('categories.products.index', $product->category);
     }
 }

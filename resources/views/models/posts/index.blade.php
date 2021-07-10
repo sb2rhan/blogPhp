@@ -2,10 +2,12 @@
 
 @section('content')
     <h1>Posts</h1>
-    @can('create', App\Models\Post::class)
-        <a href="{{ route('posts.create') }}">Add post</a>
-    @endcan
-    <a href="{{ route('products.index') }}">Go to products</a>
+    <div class="d-flex justify-content-start">
+        <a href="{{ route('categories.index') }}">See categories of products</a>
+        @can('create', App\Models\Post::class)
+            <a href="{{ route('posts.create') }}" class="mx-5">Add post</a>
+        @endcan
+    </div>
     <hr>
     @if($posts->isNotEmpty())
 

@@ -7,7 +7,7 @@ $product = $product ?? null;
 
 <h1>@if($product) Edit @else New @endif product</h1>
 
-<form action="{{ $product ? route('products.update', $product) : route('products.store') }}" method="post">
+<form action="{{ $product ? route('products.update', $product) : route('categories.products.store', $category) }}" method="post">
     @csrf
 
     @if($product) <!-- Doing this because form doesn't support PUT method -->
@@ -16,7 +16,7 @@ $product = $product ?? null;
 
     <div>
         <label for="title">Title:</label>
-        <input value="{{ old('title', $product->title ?? null) }}" type="text" id="title" name="title" required autofocus/>
+        <input value="{{ old('title', $product->title ?? null) }}" type="text" id="title" name="title" />
         <!-- old function returns old data when page reloaded -->
         @error('title')
         <span style="color:red;">{{ $message }}</span>

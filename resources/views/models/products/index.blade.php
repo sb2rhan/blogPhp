@@ -1,15 +1,20 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1>Products</h1>
-    @can('create', App\Models\Product::class)
-        <a href="{{ route('products.create') }}" style="padding-right: 20px;">New product</a>
-    @endcan
-    <a href="{{ route('posts.index') }}">Go to posts</a>
+    <h1 class="display-5">{{ $category->name }} products</h1>
+    @if ($category->description)
+    <p class="h3">Note: {{ $category->description }}</p>
+    @endif
+    <div class="d-flex justify-content-start">
+        <a href="{{ route('categories.index') }}">All categories</a>
+        @can('create', App\Models\Product::class)
+            <a href="{{ route('categories.products.create', $category) }}" class="mx-5">New product</a>
+        @endcan
+    </div>
     <hr>
     @if($products->isNotEmpty())
 
-        <ul style="display: flex; flex-flow: wrap">
+        <ul class="d-flex flex-wrap">
             @foreach($products as $product)
                 <li style="list-style-type: none; margin-left: 15px; margin-right: 15px">
                     <a href="{{ route('products.show', $product) }}">

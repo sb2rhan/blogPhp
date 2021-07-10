@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Product;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ProductPolicy
+class CategoryPolicy
 {
     use HandlesAuthorization;
 
@@ -15,26 +15,26 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        return true;
+        return $user->is_admin;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Product $product)
+    public function update(User $user, Category $category)
     {
-        return $user->id == $product->user->id;
+        return $user->is_admin;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Category  $category
      * @return mixed
      */
-    public function delete(User $user, Product $product)
+    public function delete(User $user, Category $category)
     {
-        return $user->id == $product->user->id || $user->is_admin;
+        return $user->is_admin;
     }
 }
