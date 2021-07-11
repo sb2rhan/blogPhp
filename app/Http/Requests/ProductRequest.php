@@ -22,8 +22,8 @@ class ProductRequest extends FormRequest
                 'max:255',
                 $uniqueTitle
             ],
-            'description' => [],
-            'image_link' => [],
+            'description' => ['nullable'],
+            'image_link' => ['nullable', 'file'],
             'count' => ['int', 'min:0'],
             'price' => ['min:0'],
             'category_id' => ['nullable', 'int', Rule::exists((new Category())->getTable(), 'id')]

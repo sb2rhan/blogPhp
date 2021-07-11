@@ -18,10 +18,15 @@
             @foreach($products as $product)
                 <li style="list-style-type: none; margin-left: 15px; margin-right: 15px">
                     <a href="{{ route('products.show', $product) }}">
-                        <div style="display: flex; flex-flow: column; justify-content: center">
-                            <img style="min-width: 120px;" alt="{{ $product->title }}"
-                                 height="140px" width="160px"
-                                 src="{{ $product->image_link ?? "https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png" }}">
+                        <div class="d-flex flex-column justify-content-center">
+                            @if($product->image_link)
+                                <img style="min-width: 120px;" alt="{{ $product->title }}"
+                                     height="140px" width="160px"
+                                     src="{{ \Storage::url($product->image_link) ?? "https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png" }}">
+                            @else
+                                <img style="min-width: 120px;" alt="No image" height="140px" width="160px"
+                                     src="https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png" />
+                            @endif
                             <p>{{ $product->title }}</p>
                         </div>
                     </a>

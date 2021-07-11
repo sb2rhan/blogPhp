@@ -12,7 +12,7 @@ Route::redirect('/', 'posts')
 
 Route::resource('posts', PostController::class)
     ->except('index', 'show')
-    ->middleware('auth');
+    ->middleware(['auth', 'verified']);
 
 Route::resource('posts', PostController::class)
     ->only('index', 'show');
@@ -20,17 +20,20 @@ Route::resource('posts', PostController::class)
 
 Route::resource('categories', CategoryController::class)
     ->except('index', 'show')
-    ->middleware('auth');
+    ->middleware(['auth', 'verified']);
 
 Route::resource('categories', CategoryController::class)
-    ->except('show')
     ->only('index');
 
 Route::resource('categories.products', ProductController::class)
     ->except('index', 'show')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->shallow();
 
 Route::resource('categories.products', ProductController::class)
     ->only('index', 'show')
     ->shallow();
+
+Route::delete('products/{product}/image', [ProductController::class, 'deleteImage'])
+    ->middleware(['auth', 'verified'])
+    ->name('products.deleteImage');

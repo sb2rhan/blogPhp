@@ -7,7 +7,8 @@ $product = $product ?? null;
 
 <h1>@if($product) Edit @else New @endif product</h1>
 
-<form action="{{ $product ? route('products.update', $product) : route('categories.products.store', $category) }}" method="post">
+<form action="{{ $product ? route('products.update', $product) : route('categories.products.store', $category) }}"
+      method="post" enctype="multipart/form-data">
     @csrf
 
     @if($product) <!-- Doing this because form doesn't support PUT method -->
@@ -31,7 +32,7 @@ $product = $product ?? null;
     </div>
     <div>
         <label for="image_link">Image:</label>
-        <input value="{{ old('image_link', $product->image_link ?? null) }}" type="text" id="image_link" name="image_link" />
+        <input accept="image/*" value="{{ old('image_link', $product->image_link ?? null) }}" type="file" id="image_link" name="image_link" />
         @error('image_link')
         <span style="color:red;">{{ $message }}</span>
         @enderror

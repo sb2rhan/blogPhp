@@ -11,13 +11,19 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-4 d-flex justify-content-end">
-                <img alt="{{ $product->title }} image"
-                     style="min-width: 120px;" width="260px"
-                     src="{{ $product->image_link ?? "https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png" }}">
+        <div class="row justify-content-center">
+            @if($product->image_link)
+            <div class="col-5 d-flex flex-column justify-content-center align-items-end">
+                    <img alt="{{ $product->title }} image"
+                         style="min-width: 120px;" width="260px"
+                         src="{{ \Storage::url($product->image_link) }}">
+                    <form class="mt-4" action="{{ route('products.deleteImage', $product) }}" method="post">
+                        @csrf @method('delete')
+                        <button class="btn btn-outline-warning">Delete image</button>
+                    </form>
             </div>
-            <div class="col-6">
+            @endif
+            <div class="col-7">
                 <p>
                     Created at: {{ $product->created_at }} <br>
                     In storage: {{ $product->count }} left <br>
